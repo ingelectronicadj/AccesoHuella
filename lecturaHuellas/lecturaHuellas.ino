@@ -1,20 +1,3 @@
-/*************************************************** 
-  This is an example sketch for our optical Fingerprint sensor
-
-  Designed specifically to work with the Adafruit BMP085 Breakout 
-  ----> http://www.adafruit.com/products/751
-
-  These displays use TTL Serial to communicate, 2 pins are required to 
-  interface
-  Adafruit invests time and resources providing this open source code, 
-  please support Adafruit and open-source hardware by purchasing 
-  products from Adafruit!
-
-  Written by Limor Fried/Ladyada for Adafruit Industries.  
-  BSD license, all text above must be included in any redistribution
- ****************************************************/
-
-
 #include <Adafruit_Fingerprint.h>
 #include <SoftwareSerial.h>
 
@@ -33,18 +16,18 @@ void setup()
   while (!Serial);  // For Yun/Leo/Micro/Zero/...
   
   Serial.begin(9600);
-  Serial.println("Adafruit finger detect test");
+  Serial.println("Inicia deteccion");
 
   // set the data rate for the sensor serial port
   finger.begin(57600);
   
   if (finger.verifyPassword()) {
-    Serial.println("Found fingerprint sensor!");
+    Serial.println("Sensor de Huellas Dactilares encontrado!");
   } else {
-    Serial.println("Did not find fingerprint sensor :(");
+    Serial.println("Revice conexiones, el sensor no opera correctamente");
     while (1);
   }
-  Serial.println("Waiting for valid finger...");
+  Serial.println("A la espera de una huella...");
 }
 
 void loop()                     // run over and over again
@@ -58,19 +41,19 @@ uint8_t getFingerprintID() {
   uint8_t p = finger.getImage();
   switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("Image taken");
+      Serial.println("Imagen Detectada");
       break;
     case FINGERPRINT_NOFINGER:
-      Serial.println("No finger detected");
+      Serial.println("Huella no detectada");
       return p;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("Communication error");
+      Serial.println("Error de comunicacion");
       return p;
     case FINGERPRINT_IMAGEFAIL:
-      Serial.println("Imaging error");
+      Serial.println("Error en la imagen");
       return p;
     default:
-      Serial.println("Unknown error");
+      Serial.println("Error Desconocido");
       return p;
   }
 
@@ -79,43 +62,43 @@ uint8_t getFingerprintID() {
   p = finger.image2Tz();
   switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("Image converted");
+      Serial.println("Imagen procesada");
       break;
     case FINGERPRINT_IMAGEMESS:
-      Serial.println("Image too messy");
+      Serial.println("Imagen distorcionada, limpie el lector");
       return p;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("Communication error");
+      Serial.println("Error de comunicacion");
       return p;
     case FINGERPRINT_FEATUREFAIL:
-      Serial.println("Could not find fingerprint features");
+      Serial.println("No se pudo encontrar características de huellas dactilares");
       return p;
     case FINGERPRINT_INVALIDIMAGE:
-      Serial.println("Could not find fingerprint features");
+      Serial.println("No se pudo encontrar características de huellas dactilares");
       return p;
     default:
-      Serial.println("Unknown error");
+      Serial.println("Error desconocido");
       return p;
   }
   
   // OK converted!
   p = finger.fingerFastSearch();
   if (p == FINGERPRINT_OK) {
-    Serial.println("Found a print match!");
+    Serial.println("Se encontro una coincidencia!");
   } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
-    Serial.println("Communication error");
+    Serial.println("Error de comunicacion");
     return p;
   } else if (p == FINGERPRINT_NOTFOUND) {
-    Serial.println("Did not find a match");
+    Serial.println("No se encuentran coincidencias con las huellas almacenadas");
     return p;
   } else {
-    Serial.println("Unknown error");
+    Serial.println("Error desconocido");
     return p;
   }   
   
   // found a match!
-  Serial.print("Found ID #"); Serial.print(finger.fingerID); 
-  Serial.print(" with confidence of "); Serial.println(finger.confidence); 
+  Serial.print("Huella encontrada ID #"); Serial.print(finger.fingerID); 
+  Serial.print(" con nivel de confianza de "); Serial.println(finger.confidence); 
 }
 
 // returns -1 if failed, otherwise returns ID #
@@ -136,7 +119,7 @@ int getFingerprintIDez() {
   digitalWrite(11,LOW);//Led verde apagado
   delay(1000);
   digitalWrite(12,HIGH);//Led rojo apagado
-  Serial.print("Found ID #"); Serial.print(finger.fingerID); 
-  Serial.print(" with confidence of "); Serial.println(finger.confidence);
+  Serial.print("Huella dactilar encontrada con el ID #"); Serial.print(finger.fingerID); 
+  Serial.print(" con nivel de confianza de "); Serial.println(finger.confidence);
   return finger.fingerID; 
 }

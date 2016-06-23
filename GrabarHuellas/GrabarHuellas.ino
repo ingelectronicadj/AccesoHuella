@@ -1,18 +1,9 @@
-/*************************************************** 
-  This is an example sketch for our optical Fingerprint sensor
+/************************************************* **
+   Este es un esquema de ejemplo para nuestro sensor óptico de huellas dactilares
 
-  Designed specifically to work with the Adafruit BMP085 Breakout 
-  ----> http://www.adafruit.com/products/751
-
-  These displays use TTL Serial to communicate, 2 pins are required to 
-  interface
-  Adafruit invests time and resources providing this open source code, 
-  please support Adafruit and open-source hardware by purchasing 
-  products from Adafruit!
-
-  Written by Limor Fried/Ladyada for Adafruit Industries.  
-  BSD license, all text above must be included in any redistribution
- ****************************************************/
+   Diseñado específicamente para trabajar con el Adafruit BMP085 Breakout
+   ----> Http://www.adafruit.com/products/751
+  *************************************************/
 
 #include <Adafruit_Fingerprint.h>
 #include <SoftwareSerial.h>
@@ -38,15 +29,15 @@ void setup()
   delay(500);
   
   Serial.begin(9600);
-  Serial.println("Adafruit Fingerprint sensor enrollment");
+  Serial.println("Registro de nueva huella dactilar");
 
   // set the data rate for the sensor serial port
   finger.begin(57600);
   
   if (finger.verifyPassword()) {
-    Serial.println("Found fingerprint sensor!");
+    Serial.println("Registre su Huella dactilar");
   } else {
-    Serial.println("Did not find fingerprint sensor :(");
+    Serial.println("El sensor no opera correctamente, verifique conexiones");
     while (1);
   }
 }
@@ -69,9 +60,9 @@ uint8_t readnumber(void) {
 
 void loop()                     // run over and over again
 {
-  Serial.println("Ready to enroll a fingerprint! Please Type in the ID # you want to save this finger as...");
+  Serial.println("Listo para registrar una huella digital! Por favor escriba el ID # que desea asociar a la huella...");
   id = readnumber();
-  Serial.print("Enrolling ID #");
+  Serial.print("Almacenando ID #");
   Serial.println(id);
   
   while (!  getFingerprintEnroll() );
@@ -80,24 +71,24 @@ void loop()                     // run over and over again
 uint8_t getFingerprintEnroll() {
 
   int p = -1;
-  Serial.print("Waiting for valid finger to enroll as #"); Serial.println(id);
+  Serial.print("Esperando una nueva huella #"); Serial.println(id);
   while (p != FINGERPRINT_OK) {
     p = finger.getImage();
     switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("Image taken");
+      Serial.println("Captura realizada");
       break;
     case FINGERPRINT_NOFINGER:
       Serial.println(".");
       break;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("Communication error");
+      Serial.println("Error de comunicacion");
       break;
     case FINGERPRINT_IMAGEFAIL:
-      Serial.println("Imaging error");
+      Serial.println("Error en captura de imagen");
       break;
     default:
-      Serial.println("Unknown error");
+      Serial.println("Error Desconocido");
       break;
     }
   }
@@ -107,26 +98,26 @@ uint8_t getFingerprintEnroll() {
   p = finger.image2Tz(1);
   switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("Image converted");
+      Serial.println("Captura de imagen convertida");
       break;
     case FINGERPRINT_IMAGEMESS:
-      Serial.println("Image too messy");
+      Serial.println("Imagen con muchas impurezas");
       return p;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("Communication error");
+      Serial.println("Error de comunicacion");
       return p;
     case FINGERPRINT_FEATUREFAIL:
-      Serial.println("Could not find fingerprint features");
+      Serial.println("No se pudo encontrar características de huellas dactilares");
       return p;
     case FINGERPRINT_INVALIDIMAGE:
-      Serial.println("Could not find fingerprint features");
+      Serial.println("No se pudo encontrar características de huellas dactilares");
       return p;
     default:
-      Serial.println("Unknown error");
+      Serial.println("Error Desconocido");
       return p;
   }
   
-  Serial.println("Remove finger");
+  Serial.println("Retire la huella");
   delay(2000);
   p = 0;
   while (p != FINGERPRINT_NOFINGER) {
@@ -134,24 +125,24 @@ uint8_t getFingerprintEnroll() {
   }
   Serial.print("ID "); Serial.println(id);
   p = -1;
-  Serial.println("Place same finger again");
+  Serial.println("Coloque la misma huella de nuevo");
   while (p != FINGERPRINT_OK) {
     p = finger.getImage();
     switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("Image taken");
+      Serial.println("Imagen Capturada");
       break;
     case FINGERPRINT_NOFINGER:
       Serial.print(".");
       break;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("Communication error");
+      Serial.println("Error de comunicacion");
       break;
     case FINGERPRINT_IMAGEFAIL:
-      Serial.println("Imaging error");
+      Serial.println("Error en la imagen");
       break;
     default:
-      Serial.println("Unknown error");
+      Serial.println("Error desconocido");
       break;
     }
   }
@@ -161,57 +152,57 @@ uint8_t getFingerprintEnroll() {
   p = finger.image2Tz(2);
   switch (p) {
     case FINGERPRINT_OK:
-      Serial.println("Image converted");
+      Serial.println("Imagen procesada");
       break;
     case FINGERPRINT_IMAGEMESS:
-      Serial.println("Image too messy");
+      Serial.println("Imagen con muchas impurezas");
       return p;
     case FINGERPRINT_PACKETRECIEVEERR:
-      Serial.println("Communication error");
+      Serial.println("Error de comunicacion");
       return p;
     case FINGERPRINT_FEATUREFAIL:
-      Serial.println("Could not find fingerprint features");
+      Serial.println("No se pudo encontrar características de huellas dactilares");
       return p;
     case FINGERPRINT_INVALIDIMAGE:
-      Serial.println("Could not find fingerprint features");
+      Serial.println("No se pudo encontrar características de huellas dactilares");
       return p;
     default:
-      Serial.println("Unknown error");
+      Serial.println("Error Desconocido");
       return p;
   }
   
   // OK converted!
-  Serial.print("Creating model for #");  Serial.println(id);
+  Serial.print("Creación de modelo dactilar para #");  Serial.println(id);
   
   p = finger.createModel();
   if (p == FINGERPRINT_OK) {
-    Serial.println("Prints matched!");
+    Serial.println("Almacenamiento exitoso");
   } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
-    Serial.println("Communication error");
+    Serial.println("Error de comunicacion");
     return p;
   } else if (p == FINGERPRINT_ENROLLMISMATCH) {
-    Serial.println("Fingerprints did not match");
+    Serial.println("Las huellas dactilares no coinciden");
     return p;
   } else {
-    Serial.println("Unknown error");
+    Serial.println("Error Desconocido");
     return p;
   }   
   
   Serial.print("ID "); Serial.println(id);
   p = finger.storeModel(id);
   if (p == FINGERPRINT_OK) {
-    Serial.println("Stored!");
+    Serial.println("Almacenado!");
   } else if (p == FINGERPRINT_PACKETRECIEVEERR) {
-    Serial.println("Communication error");
+    Serial.println("Error de comunicacion");
     return p;
   } else if (p == FINGERPRINT_BADLOCATION) {
-    Serial.println("Could not store in that location");
+    Serial.println("No se pudo almacenar en esa ubicación");
     return p;
   } else if (p == FINGERPRINT_FLASHERR) {
-    Serial.println("Error writing to flash");
+    Serial.println("Error escribiendo en la flash del sensor");
     return p;
   } else {
-    Serial.println("Unknown error");
+    Serial.println("Error Desconocido");
     return p;
   }   
 }
